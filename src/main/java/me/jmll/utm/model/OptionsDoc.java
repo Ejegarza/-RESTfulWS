@@ -9,7 +9,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.springframework.http.HttpMethod;
 
 public class OptionsDoc {
-	private Map<HttpMethod, String> methods = new Hashtable<>();
+
+private Map<HttpMethod, String> methods = new Hashtable<>();
+
 	
 	@XmlElement(name="methods")
 	public Map<HttpMethod, String> getMethods() {
