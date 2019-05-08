@@ -33,36 +33,36 @@ public class UserRest {
 	UserService userService;
 
 	/**
-	 * Recurso para obtener colecci贸n de entidades. 
+	 * Recurso para obtener colecci髇 de entidades. 
 	 * 1 (a) Obtener lista de links de Usuarios en JSON
-	 * en lugar de informaci贸n del
+	 * en lugar de informaci髇 del
 	 *  usuario {"_links": links, "data": userData}
 	 */
-	@RequestMapping(value = "user",
+	@RequestMapping(value = "user", 
 			method = RequestMethod.GET,
 			produces = { "application/json", "text/json" })
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public Map<String, Object> getUsersJSON() {
 		ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentServletMapping();
-
-        List<Link> links = new ArrayList<Link>();
-        links.add(new Link(builder.path("/").build().toString(), "api"));
-        links.add(new Link(builder.path("/user/").build().toString(), "self"));
-
-        List<Link> data = new ArrayList<Link>();
-        userService.getUsers().forEach(user -> data.add(new Link(ServletUriComponentsBuilder.fromCurrentServletMapping().path("/user/{username}").buildAndExpand(user.getUsername()).toString(), user.getUsername())));
-
-        Map<String, Object> response = new Hashtable<>(2);
-        response.put("_links", links);
-        response.put("data", data);
+		
+		List<Link> links = new ArrayList<Link>();
+		links.add(new Link(builder.path("/").build().toString(), "api"));
+		links.add(new Link(builder.path("/user/").build().toString(), "self"));
+		
+		List<Link> data = new ArrayList<Link>();
+		userService.getUsers().forEach(user -> data.add(new Link(ServletUriComponentsBuilder.fromCurrentServletMapping().path("/user/" + user.getUsername()).build().toString(), user.getUsername())));
+		
+		Map<String, Object> response = new Hashtable<>(2);
+		response.put("_links", links);
+		response.put("data", data);
 		return response;
 	}
 	
 	/**
-	 * Recurso para obtener colecci贸n de entidades.
+	 * Recurso para obtener colecci髇 de entidades. 
 	 * 1 (b) Obtener lista de links de Usuarios en XML
-	 * en lugar de informaci贸n del usuario (UserLinkListResource)
+	 * en lugar de informaci髇 del usuario (UserLinkListResource)
 	 */
 	@RequestMapping(value = "user", 
 			method = RequestMethod.GET,
@@ -71,10 +71,10 @@ public class UserRest {
 	@ResponseStatus(HttpStatus.OK)
 	public UserLinkListResource getUsersXML() {
 		ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentServletMapping();
-        UserLinkListResource userLinksResource = new UserLinkListResource();
-        userLinksResource.addLink(new Link(builder.path("/").build().toString(), "api"));
-        userLinksResource.addLink(new Link(builder.path("/user/").build().toString(), "self"));
-        userService.getUsers().forEach(user -> userLinksResource.addLink(new Link(ServletUriComponentsBuilder.fromCurrentServletMapping().path("/user/{username}").buildAndExpand(user.getUsername()).toString(), user.getUsername())));
+		UserLinkListResource userLinksResource = new UserLinkListResource();
+		userLinksResource.addLink(new Link(builder.path("/").build().toString(), "api"));
+		userLinksResource.addLink(new Link(builder.path("/user/").build().toString(), "self"));
+		userService.getUsers().forEach(user -> userLinksResource.addUserLink(new Link(ServletUriComponentsBuilder.fromCurrentServletMapping().path("/user/" + user.getUsername()).build().toString(), user.getUsername())));
 		return userLinksResource;
 	}
 	
@@ -89,14 +89,14 @@ public class UserRest {
 	@ResponseStatus(HttpStatus.OK)
 	public Map<String, Object> getUserJSON(@PathVariable("username") String username) {
 		ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentServletMapping();
-
-        List<Link> links = new ArrayList<Link>();
-        links.add(new Link(builder.path("/user/").build().toString(), "user"));
-        links.add(new Link(builder.path(username).build().toString(), "self"));
-
-        Map<String, Object> response = new Hashtable<>(2);
-        response.put("links", links);
-        response.put("data", userService.getUser(username));
+		
+		List<Link> links = new ArrayList<Link>();
+		links.add(new Link(builder.path("/user/").build().toString(), "api"));
+		links.add(new Link(builder.path(username).build().toString(), "self"));
+		
+		Map<String, Object> response = new Hashtable<>(2);
+		response.put("_links", links);
+		response.put("data", userService.getUser(username));
 		return response;
 	}
 	
@@ -111,10 +111,10 @@ public class UserRest {
 	@ResponseStatus(HttpStatus.OK)
 	public UserResource getUserXML(@PathVariable("username") String username) {
 		ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentServletMapping();
-        UserResource resource = new UserResource();
-        resource.addLink(new Link(builder.path("/user/").build().toString(), "user"));
-        resource.addLink(new Link(builder.path("username").build().toString(), "self"));
-        resource.setUser(userService.getUser(username));
+		UserResource resource = new UserResource();
+		resource.addLink(new Link(builder.path("/user/").build().toString(), "user"));
+		resource.addLink(new Link(builder.path(username).build().toString(), "self"));
+		resource.setUser(userService.getUser(username));
 		return resource;
 	}
 
