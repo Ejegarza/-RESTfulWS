@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface FileService {
 	public Path getFile(String fileName);
+	public String delete(String path);
 	public List<Path> walkDir(Path path, List<Path> paths);
 	/**
 	 * Método uploadFile que tiene como parámetros
